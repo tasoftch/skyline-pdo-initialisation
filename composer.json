@@ -1,7 +1,6 @@
 {
-  "name": "skyline/pdo-initialisation",
+  "name": "skyline-admin/pdo-initialisation",
   "license": "BSD-3-Clause",
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Thomas Abplanalp",
