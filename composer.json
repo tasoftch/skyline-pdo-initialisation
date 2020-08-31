@@ -6,5 +6,18 @@
       "name": "Thomas Abplanalp",
       "email": "info@tasoft.ch"
     }
-  ]
+  ],
+  "autoload": {
+    "psr-4": {
+      "Skyline\\Admin\\PDO\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=7.2",
+    "skyline/pdo": "^0.9",
+    "ext-pdo": "*"
+  },
+  "require-dev": {
+    "skyline/kernel": "^0.8"
+  }
 }

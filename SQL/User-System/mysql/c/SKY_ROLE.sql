@@ -32,56 +32,14 @@
  */
 
 /*
- *   const OPTION_INTERNAL      = 1;
- *   const OPTION_LOGIN_EMAIL   = 8;
- */
-
-BEGIN TRANSACTION;
-
-CREATE TABLE IF NOT EXISTS SKY_USER
-(
-    id                INTEGER PRIMARY KEY AUTOINCREMENT,
-    username          varchar(50)            not null unique,
-    credentials       varchar(100)           not null,
-    email             varchar(80) default '' not null unique,
-    prename           varchar(50) default '' not null,
-    surname           varchar(50) default '' not null,
-    options           int         default 8  not null,
-    lastLoginDate     datetime               null
-);
-
-/*
-
- THE INITIALISATION SQL NEVER INSERTS A USER DIRECTLY.
- THIS IS DONE AFTER INITIALISATION BY SKYLINE CMS ITSELF.
-
- */
-
-/*
- *   const OPTION_INTERNAL      = 1;
- */
-CREATE TABLE IF NOT EXISTS SKY_GROUP
-(
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    name        varchar(100)     not null unique,
-    description text            default null,
-    options     int    default 0 not null
-);
-
-INSERT INTO SKY_GROUP (id, name, description, options) VALUES (1, 'Administrator', 'The administrators of Skyline CMS', 1);
-INSERT INTO SKY_GROUP (id, name, description, options) VALUES (2, 'Author', 'Authors can add, edit, translate and delete pages and contents of your website', 1);
-INSERT INTO SKY_GROUP (id, name, description, options) VALUES (3, 'Translator', 'Translators can translate existing text into several languages', 1);
-
-UPDATE SQLITE_SEQUENCE SET seq = 50 WHERE name = 'SKY_GROUP';
-
-/*
  *   const OPTION_ASSIGNABLE    = 2;
  *   const OPTION_VISIBLE       = 4;
  *   const OPTION_FINAL         = 8;
  */
 CREATE TABLE IF NOT EXISTS SKY_ROLE
 (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    id          int AUTO_INCREMENT
+        primary key,
     name        varchar(50)      not null,
     description text             default null,
     parent      int              default 0 not null,
@@ -99,7 +57,6 @@ INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (5, 'EDIT',
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (6, 'TRANSLATE', 'Can translate contents', 5, 15);
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (7, 'DELETE', 'Can delete contents', 3, 15);
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (8, 'COMPILE', 'Can compile the project''s contents', 3, 15);
-
 
 /* GROUPS */
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (10, 'GROUPS', 'Can manage the groups of the application', 1, 7);
@@ -125,7 +82,6 @@ INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (35, 'PRIVI
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (36, 'DELETE', 'Can delete users', 30, 15);
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (37, 'PW_RESET', 'Can reset passwords of the users', 30, 15);
 
-
 /* MEDIA */
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (40, 'MEDIA', 'Can manage the media elements of the application', 3, 7);
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (41, 'EDIT', 'Can edit media elements', 40, 7);
@@ -133,40 +89,5 @@ INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (42, 'VIEW'
 INSERT INTO SKY_ROLE (id, name, description, parent, options) VALUES (43, 'DELETE', 'Can delete media elements', 40, 15);
 
 
-UPDATE SQLITE_SEQUENCE SET seq = 100 WHERE name = 'SKY_ROLE';
-
-CREATE TABLE IF NOT EXISTS SKY_USER_ROLE (
-                                             user int not null ,
-                                             role int not null
-);
-
-CREATE TABLE IF NOT EXISTS SKY_USER_GROUP (
-                                              user int not null ,
-                                              groupid int not null
-);
-
-CREATE TABLE IF NOT EXISTS SKY_GROUP_ROLE (
-                                              groupid int not null ,
-                                              role int not null
-);
-
-/* ASSIGN ROLES TO GROUPS */
-
-/* ADMINISTRATOR */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (1, 2); /* SKYLINE.ADMIN */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (1, 3); /* SKYLINE.CONTENTS */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (1, 10); /* SKYLINE.GROUPS */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (1, 20); /* SKYLINE.ROLES */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (1, 30); /* SKYLINE.USERS */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (1, 40); /* SKYLINE.CONTENTS.MEDIA */
-
-
-/* AUTHOR */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (2, 2); /* SKYLINE.ADMIN */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (2, 3); /* SKYLINE.CONTENTS */
-
-/* TRANSLATOR */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (3, 2); /* SKYLINE.ADMIN */
-INSERT INTO SKY_GROUP_ROLE (groupid, role) VALUES (3, 6); /* SKYLINE.CONTENTS.EDIT.TRANSLATE */
-
-COMMIT;
+ALTER TABLE SKY_ROLE
+    MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
