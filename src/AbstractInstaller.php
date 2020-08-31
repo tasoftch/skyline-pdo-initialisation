@@ -52,6 +52,23 @@ class AbstractInstaller implements TableInstallerInterface, TableUninstallerInte
 		//  "domain" => ['table1', 'table2', ...]
 	];
 
+	public static function canInit(PDO $PDO): bool {
+		$ds = DIRECTORY_SEPARATOR;
+		$root = dirname(__DIR__) . "{$ds}SQL$ds";
+
+		if(!is_dir($root))
+			return false;
+
+		foreach(array_keys(static::$tableNames) as $domain) {
+			$dir = $root;
+			if($domain)
+				$dir .= "$domain$ds" . strtolower( $PDO->getAttribute( PDO::ATTR_DRIVER_NAME ) ) . "{$ds}c";
+			if(!is_dir($dir))
+				return false;
+		}
+		return true;
+	}
+
 	/**
 	 * @inheritDoc
 	 */
